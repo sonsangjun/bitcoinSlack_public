@@ -1,2 +1,2 @@
-# bitcoinSlack_public
-Slack 봇을 통한 전송
+# bitcoinSlack
+슬랙전용(DB에 쌓인 메시지 발송)

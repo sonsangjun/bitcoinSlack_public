@@ -1,0 +1,33 @@
+{
+  "name": "server.js",
+  "version": "1.0.0",
+  "description": "bitcoinSlack",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ."
+  },
+  "author": "san9014@gmail.com",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonsangjun/bitcoinSlack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sonsangjun/bitcoinSlack/issues"
+  },
+  "homepage": "https://github.com/sonsangjun/bitcoinSlack#readme",
+  "dependencies": {
+    "@slack/web-api": "^6.1.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "moment": "^2.29.1",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.4.17",
+    "nodemon": "^2.0.7",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0",
+    "xhr2": "^0.2.0",
+    "xmlhttprequest": "^1.8.0"
+  }
+}
