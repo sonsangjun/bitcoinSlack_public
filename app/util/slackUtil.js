@@ -1,5 +1,6 @@
 const logger = require("../conf/winston");
 const bConst = require('./bitConst');
+const objUtil = require('./objectUtil');
 
 let _util = {};
 
@@ -47,6 +48,88 @@ _util.makeSlackMsgOfMulti = function(arr){
     });
 
     return cnvtArr;
+};
+
+/**
+ * Slack타이틀 생성()
+ * @param {any} title 타이틀제목
+ * @returns 
+ */
+_util.setSlackTitle = function(title){
+    const symbol = ((process && process.env && process.env.targetSymbol) ? process.env.targetSymbol : '');
+    const cnvttitle = ['(',symbol,')'].join('');
+
+    if(symbol){
+        return [cnvttitle, ' ', title].join('');
+    }
+
+    return title;
+};
+
+/**
+ * 매수 데이터 Slack Msg 만들기
+ * @param {any} buydata 매수 데이터
+ * @returns 
+ */
+_util.setSlackMsgOfOrderBuy = function(buydata){
+    let message = '';
+    
+    message = [
+             'price(b/s): ',buydata.price, ' / ', '',
+        '\n','qty: ',buydata.qty,
+        '\n',' ',
+        '\n','===== BUY.INFO =====',
+        '\n','inAccNo: ',buydata.innerAccNo,
+        '\n','cId: ',buydata.clientOrderId,
+        '\n','fee: ',buydata.buyFee,
+        '\n','trTime: ',_util.getFullTimeWithDelimter(buydata.transactTime),
+
+        objUtil.objView(buydata)
+
+    ].join('');
+
+    return message;
+};
+
+/**
+ * 매도 데이터 Slack Msg 만들기
+ * @param {any} buydata  매수 데이터
+ * @param {any} selldata 매도 데이터
+ * @returns 
+ */
+_util.setSlackMsgOfOrderSell = function(buydata, selldata){
+    let message = '';
+
+    message = [ 
+             'price(b/s): ',buydata.price, ' / ', selldata.sellPrice,
+        '\n','qty: ',buydata.qty,
+        '\n','profit($): ', selldata.profit,
+        '\n','profit(%): ', selldata.profitRate,
+        '\n',' ',
+        '\n','===== BUY.INFO =====',
+        '\n','inAccNo: ',buydata.innerAccNo,
+        '\n','cId: ',buydata.clientOrderId,
+        '\n','fee: ',buydata.buyFee,
+        '\n','trTime: ',_util.getFullTimeWithDelimter(buydata.transactTime),
+        '\n',' ',
+        '\n','===== SELL.INFO =====',
+        '\n','inAccNo: ',selldata.innerAccNo,
+        '\n','cId: ',selldata.clientOrderId,
+        '\n','fee: ',buydata.sellFee,
+        '\n','trTime: ',_util.getFullTimeWithDelimter(selldata.sellTime),
+
+    ].join('');
+
+    return message;
 }
+
+/**
+ * 시간 전체를 표시한다. YYYYMMDD.HHMMSS
+ * @param {any} timestamp 타임스탬프(13자리)
+ * @returns 
+ */
+_util.getFullTimeWithDelimter = function(timestamp){
+    return [objUtil.getYYYYMMDD(timestamp) ,'.', objUtil.getHHMMSS(timestamp)].join('') ;
+};
 
 module.exports = _util;
