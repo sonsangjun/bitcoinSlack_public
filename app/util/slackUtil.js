@@ -2,6 +2,7 @@ const logger = require("../conf/winston");
 const bConst = require('./bitConst');
 const objUtil = require('./objectUtil');
 
+let _private = {};
 let _util = {};
 
 /**
@@ -75,16 +76,15 @@ _util.setSlackMsgOfOrderBuy = function(buydata){
     let message = '';
     
     message = [
-             'price(b/s): ',buydata.price, ' / ', '',
-        '\n','qty: ',buydata.qty,
+             'price(b/s): ',_private.viewFixed(buydata.price), ' / ', '',
+        '\n','qty: ',_private.viewFixed(buydata.qty),
         '\n',' ',
         '\n','===== BUY.INFO =====',
         '\n','inAccNo: ',buydata.innerAccNo,
-        '\n','cId: ',buydata.clientOrderId,
-        '\n','fee: ',buydata.buyFee,
-        '\n','trTime: ',_util.getFullTimeWithDelimter(buydata.transactTime),
-
-        objUtil.objView(buydata)
+        '\n','cId: '   ,buydata.clientOrderId,
+        '\n','fee($): ',_private.viewFixed(buydata.buyFee),
+        '\n','Amt($): ',_private.viewFixed(buydata.price * buydata.qty),
+        '\n','trTime: ',_util.getFullTimeWithDelimter(buydata.transactTime)
 
     ].join('');
 
@@ -103,19 +103,20 @@ _util.setSlackMsgOfOrderSell = function(buydata, selldata){
     message = [ 
              'price(b/s): ',buydata.price, ' / ', selldata.sellPrice,
         '\n','qty: ',buydata.qty,
-        '\n','profit($): ', selldata.profit,
-        '\n','profit(%): ', selldata.profitRate,
+        '\n','profit($/%): ', selldata.profit, ' / ', selldata.profitRate,
         '\n',' ',
         '\n','===== BUY.INFO =====',
         '\n','inAccNo: ',buydata.innerAccNo,
         '\n','cId: ',buydata.clientOrderId,
-        '\n','fee: ',buydata.buyFee,
+        '\n','fee($): ',_private.viewFixed(buydata.buyFee),
+        '\n','Amt($): ',_private.viewFixed(buydata.price * buydata.qty),
         '\n','trTime: ',_util.getFullTimeWithDelimter(buydata.transactTime),
         '\n',' ',
         '\n','===== SELL.INFO =====',
         '\n','inAccNo: ',selldata.innerAccNo,
-        '\n','cId: ',selldata.clientOrderId,
-        '\n','fee: ',buydata.sellFee,
+        '\n','cId: '   ,selldata.clientOrderId,
+        '\n','fee($): ',_private.viewFixed(selldata.sellFee),
+        '\n','Amt($): ',_private.viewFixed(selldata.sellPrice * selldata.sbQty),
         '\n','trTime: ',_util.getFullTimeWithDelimter(selldata.sellTime),
 
     ].join('');
@@ -131,5 +132,10 @@ _util.setSlackMsgOfOrderSell = function(buydata, selldata){
 _util.getFullTimeWithDelimter = function(timestamp){
     return [objUtil.getYYYYMMDD(timestamp) ,'.', objUtil.getHHMMSS(timestamp)].join('') ;
 };
+
+_private.viewFixed = function(value){
+    const viewFixed = 3;
+    return Number(value).toFixed(viewFixed);
+}
 
 module.exports = _util;
