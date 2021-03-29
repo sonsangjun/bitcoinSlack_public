@@ -40,6 +40,7 @@ module.exports = (function(){
     constant.SLACK.TYPE = {};
     constant.SLACK.TYPE.ERROR = 'Error';
     constant.SLACK.TYPE.INFO = 'Info';
+    constant.SLACK.TYPE.ORDER = 'Order';
 
     return constant;
 
